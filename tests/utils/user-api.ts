@@ -22,3 +22,36 @@ export async function registerUser(
     },
   );
 }
+
+export async function loginUser(
+  request: APIRequestContext,
+  email: string,
+  password: string,
+): Promise<APIResponse> {
+  return request.post(
+    new URL("users/login", apiBaseUrl).toString(),
+    {
+      data: {
+        user: {
+          email,
+          password,
+        },
+      },
+    },
+  );
+}
+
+export async function updateUser(
+  request: APIRequestContext,
+  token: string,
+  user: Partial<UserData>,
+): Promise<APIResponse> {
+  return request.put(new URL("user", apiBaseUrl).toString(), {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    data: {
+      user,
+    },
+  });
+}

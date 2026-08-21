@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
-
-interface TagsResponse {
-  tags: string[];
-}
+import { TagsResponseSchema } from "../schemas/tag.schema";
 
 test('GET tags returns a tags list', async ({ request }) => {
   const response = await request.get('tags');
@@ -10,9 +7,8 @@ test('GET tags returns a tags list', async ({ request }) => {
   expect(response.status()).toBe(200);
   expect(response.headers()['content-type']).toContain('application/json');
 
-  const responseBody = (await response.json()) as TagsResponse;
- 
-  console.log(responseBody.tags);
-  expect(Array.isArray(responseBody.tags)).toBe(true);
+  const responseBody = TagsResponseSchema.parse(await response.json());
+
+  expect(responseBody.tags.every((tag) => typeof tag === "string")).toBe(true);
   
 });
