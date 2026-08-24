@@ -37,11 +37,31 @@ const registrationResponse = await registerUser(request, user);
   await expect(homePage.signInLink).toBeVisible();
 });
 
-test("User cannot log in with an incorrect password", async ({ page }) => {
+test("User cannot log in with an incorrect password", async ({ page, request }) => {
+  const uniqueIdentifier = Date.now();
+  const user: UserData = {
+    username: `invalidPasswordUser${uniqueIdentifier}`,
+    email: `invalidPasswordUser${uniqueIdentifier}@email.com`,
+    password: "test123",
+  };
+  const loginPage = new LoginPage(page);
+
+  const registrationResponse = await registerUser(request, user);
+  expect(registrationResponse.status()).toBe(201);
+
+  await loginPage.open();
+  await loginPage.login(user.email, "wrong-password");
+
+  await expect(loginPage.credentialsError).toBeVisible();
+  await expect(page).toHaveURL(/\/login$/);
+});
+
+test("User cannot log in with empty credentials", async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.open();
-  await loginPage.login("unknown-user@email.com", "wrong-password");
 
   await expect(loginPage.signInButton).toBeVisible();
+  await expect(loginPage.signInButton).toBeDisabled();
+  await expect(page).toHaveURL(/\/login$/);
 });

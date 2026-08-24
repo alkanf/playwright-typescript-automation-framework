@@ -15,4 +15,21 @@ test("User can register through the UI", async ({ page }) => {
   await registrationPage.register(username, email, password);
 
   await expect(homePage.yourFeedLink).toBeVisible();
+  await expect(page.getByRole("link", { name: username, exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test("User cannot register without a password", async ({ page }) => {
+  const uniqueIdentifier = Date.now();
+  const registrationPage = new RegistrationPage(page);
+
+  await registrationPage.open();
+  await registrationPage.usernameInput.fill(`invalidUser${uniqueIdentifier}`);
+  await registrationPage.emailInput.fill(
+    `invalidUser${uniqueIdentifier}@email.com`,
+  );
+
+  await expect(registrationPage.signUpButton).toBeVisible();
+  await expect(registrationPage.signUpButton).toBeDisabled();
+  await expect(page).toHaveURL(/\/register$/);
 });

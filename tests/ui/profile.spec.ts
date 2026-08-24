@@ -34,3 +34,12 @@ test("Registered user can follow and unfollow a profile through the UI", async (
   await profilePage.unfollow();
   await expect(profilePage.followButton).toBeVisible();
 });
+
+test("Anonymous user is redirected when opening a profile", async ({ page }) => {
+  const profilePage = new ProfilePage(page);
+
+  await profilePage.open("johndoe");
+
+  await expect(page).toHaveURL(/\/profile\/johndoe$/);
+  await expect(profilePage.usernameHeading).not.toBeVisible();
+});

@@ -31,3 +31,11 @@ test("Registered user can update the username through the UI", async ({
 
   await expect(page.getByRole("link", { name: updatedUsername })).toBeVisible();
 });
+
+test("Anonymous user is redirected when opening settings", async ({ page }) => {
+  const settingsPage = new SettingsPage(page);
+
+  await settingsPage.open();
+
+  await expect(page).toHaveURL(/\/login$/);
+});

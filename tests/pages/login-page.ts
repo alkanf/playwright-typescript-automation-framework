@@ -4,12 +4,16 @@ export class LoginPage {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly signInButton: Locator;
+  readonly credentialsError: Locator;
   readonly yourFeedLink: Locator;
 
   constructor(private readonly page: Page) {
     this.emailInput = page.getByRole("textbox", { name: "Email" });
     this.passwordInput = page.getByRole("textbox", { name: "Password" });
     this.signInButton = page.getByRole("button", { name: "Sign in" });
+    this.credentialsError = page.getByText("credentials invalid", {
+      exact: true,
+    });
     this.yourFeedLink = page.getByRole("link", {
       name: "Your Feed",
       exact: true,
