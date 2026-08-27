@@ -1,26 +1,16 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures/user.fixture";
 import { HomePage } from "../pages/home-page";
 import { LoginPage } from "../pages/login-page";
 import { SettingsPage } from "../pages/settings-page";
-import { loginUser, registerUser, UserData } from "../utils/user-api";
 
 test("Registered user can update the username through the UI", async ({
   page,
-  request,
+  registeredUser: user,
 }) => {
-  const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `settingsUser${uniqueIdentifier}`,
-    email: `settingsUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
-  const updatedUsername = `updatedUser${uniqueIdentifier}`;
+  const updatedUsername = `updatedUser${Date.now()}`;
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const settingsPage = new SettingsPage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);

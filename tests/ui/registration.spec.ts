@@ -19,17 +19,23 @@ test("User can register through the UI", async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
-test("User cannot register without a password", async ({ page }) => {
-  const uniqueIdentifier = Date.now();
-  const registrationPage = new RegistrationPage(page);
+const missingRegistrationFields = [
+  { name: "username", username: "", email: "valid@example.com", password: "test123" },
+  { name: "email", username: "validUser", email: "", password: "test123" },
+  { name: "password", username: "validUser", email: "valid@example.com", password: "" },
+];
 
-  await registrationPage.open();
-  await registrationPage.usernameInput.fill(`invalidUser${uniqueIdentifier}`);
-  await registrationPage.emailInput.fill(
-    `invalidUser${uniqueIdentifier}@email.com`,
-  );
+for (const registrationCase of missingRegistrationFields) {
+  test(`User cannot register without a ${registrationCase.name}`, async ({ page }) => {
+    const registrationPage = new RegistrationPage(page);
 
-  await expect(registrationPage.signUpButton).toBeVisible();
-  await expect(registrationPage.signUpButton).toBeDisabled();
-  await expect(page).toHaveURL(/\/register$/);
-});
+    await registrationPage.open();
+    await registrationPage.usernameInput.fill(registrationCase.username);
+    await registrationPage.emailInput.fill(registrationCase.email);
+    await registrationPage.passwordInput.fill(registrationCase.password);
+
+    await expect(registrationPage.signUpButton).toBeVisible();
+    await expect(registrationPage.signUpButton).toBeDisabled();
+    await expect(page).toHaveURL(/\/register$/);
+  });
+}

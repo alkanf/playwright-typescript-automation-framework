@@ -1,4 +1,4 @@
-import {test, expect} from "@playwright/test";
+import { test, expect } from "../fixtures/user.fixture";
 import { registerUser, UserData } from "../utils/user-api";
 import { LoginPage } from "../pages/login-page";
 import { HomePage } from "../pages/home-page";
@@ -8,22 +8,11 @@ import { SettingsPage } from "../pages/settings-page";
 
 test("Registered user can log in through UI", async ({
   page,
-  request,
-}) => { 
-   const uniqueIdentifier = Date.now();
+  registeredUser: user,
+}) => {
    const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const settingsPage = new SettingsPage(page);
-
-const user: UserData = {
-  username: `testUser${uniqueIdentifier}`,
-  email: `testUser${uniqueIdentifier}@email.com`,
-  password: "test123",
-};
-
-const registrationResponse = await registerUser(request, user);
-
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   
@@ -37,24 +26,45 @@ const registrationResponse = await registerUser(request, user);
   await expect(homePage.signInLink).toBeVisible();
 });
 
-test("User cannot log in with an incorrect password", async ({ page, request }) => {
-  const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `invalidPasswordUser${uniqueIdentifier}`,
-    email: `invalidPasswordUser${uniqueIdentifier}@email.com`,
+const invalidLoginCases = [
+  {
+    name: "an incorrect password",
+    usernamePrefix: "invalidPasswordUser",
+    emailPrefix: "invalidPasswordUser",
+    password: "wrong-password",
+    shouldRegister: true,
+  },
+  {
+    name: "an unknown email",
+    usernamePrefix: "unknownEmailUser",
+    emailPrefix: "unknownEmailUser",
     password: "test123",
-  };
-  const loginPage = new LoginPage(page);
+    shouldRegister: false,
+  },
+];
 
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
+for (const loginCase of invalidLoginCases) {
+  test(`User cannot log in with ${loginCase.name}`, async ({ page, request }) => {
+    const uniqueIdentifier = Date.now();
+    const user: UserData = {
+      username: `${loginCase.usernamePrefix}${uniqueIdentifier}`,
+      email: `${loginCase.emailPrefix}${uniqueIdentifier}@email.com`,
+      password: "test123",
+    };
+    const loginPage = new LoginPage(page);
 
-  await loginPage.open();
-  await loginPage.login(user.email, "wrong-password");
+    if (loginCase.shouldRegister) {
+      const registrationResponse = await registerUser(request, user);
+      expect(registrationResponse.status()).toBe(201);
+    }
 
-  await expect(loginPage.credentialsError).toBeVisible();
-  await expect(page).toHaveURL(/\/login$/);
-});
+    await loginPage.open();
+    await loginPage.login(user.email, loginCase.password);
+
+    await expect(loginPage.credentialsError).toBeVisible();
+    await expect(page).toHaveURL(/\/login$/);
+  });
+}
 
 test("User cannot log in with empty credentials", async ({ page }) => {
   const loginPage = new LoginPage(page);

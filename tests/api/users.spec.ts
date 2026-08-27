@@ -33,3 +33,13 @@ test("Authenticated user can update their profile through the API", async ({
   expect(updatedUser.user.bio).toBe(updatedBio);
   expect(updatedUser.user.token).toBeTruthy();
 });
+
+test("User cannot update their profile with an invalid token", async ({
+  request,
+}) => {
+  const updateResponse = await updateUser(request, "invalid-token", {
+    username: "unauthorizedUser",
+  });
+
+  expect(updateResponse.status()).toBe(401);
+});

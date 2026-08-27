@@ -43,6 +43,8 @@ export class ArticlePage {
 
   async openEditor(): Promise<void> {
     await this.newArticleLink.click();
+    await this.page.waitForURL(/\/editor$/);
+    await this.titleInput.waitFor({ state: "visible" });
   }
 
   async openArticle(slug: string): Promise<void> {

@@ -1,26 +1,17 @@
-import { test, expect } from "@playwright/test";
-import { registerUser, UserData } from "../utils/user-api";
+import { test, expect } from "../fixtures/user.fixture";
 import { ArticlePage } from "../pages/article-page";
 import { LoginPage } from "../pages/login-page";
 import { HomePage } from "../pages/home-page";
 
 test("Registered user can create an article through the UI", async ({
   page,
-  request,
+  registeredUser: user,
 }) => {
   const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `testUser${uniqueIdentifier}`,
-    email: `testUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
   const articleTitle = `Smoke article ${uniqueIdentifier}`;
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const articlePage = new ArticlePage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);
@@ -45,22 +36,14 @@ test("Registered user can create an article through the UI", async ({
 
 test("Registered user can add a comment through the UI", async ({
   page,
-  request,
+  registeredUser: user,
 }) => {
   const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `commentUser${uniqueIdentifier}`,
-    email: `commentUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
   const articleTitle = `Comment article ${uniqueIdentifier}`;
   const comment = `UI smoke comment ${uniqueIdentifier}`;
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const articlePage = new ArticlePage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);
@@ -82,20 +65,11 @@ test("Registered user can add a comment through the UI", async ({
 
 test("Registered user can favorite and unfavorite an article through the UI", async ({
   page,
-  request,
+  registeredUser: user,
 }) => {
-  const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `favoriteUser${uniqueIdentifier}`,
-    email: `favoriteUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const articlePage = new ArticlePage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);
@@ -112,20 +86,11 @@ test("Registered user can favorite and unfavorite an article through the UI", as
 
 test("User cannot publish an article without a title", async ({
   page,
-  request,
+  registeredUser: user,
 }) => {
-  const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `invalidArticleUser${uniqueIdentifier}`,
-    email: `invalidArticleUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const articlePage = new ArticlePage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);
@@ -141,19 +106,13 @@ test("User cannot publish an article without a title", async ({
   await expect(articlePage.articleTitle("Description without a title")).not.toBeVisible();
 });
 
-test("User cannot post an empty comment", async ({ page, request }) => {
-  const uniqueIdentifier = Date.now();
-  const user: UserData = {
-    username: `emptyCommentUser${uniqueIdentifier}`,
-    email: `emptyCommentUser${uniqueIdentifier}@email.com`,
-    password: "test123",
-  };
+test("User cannot post an empty comment", async ({
+  page,
+  registeredUser: user,
+}) => {
   const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const articlePage = new ArticlePage(page);
-
-  const registrationResponse = await registerUser(request, user);
-  expect(registrationResponse.status()).toBe(201);
 
   await loginPage.open();
   await loginPage.login(user.email, user.password);
