@@ -7,12 +7,17 @@ export default defineConfig({
 
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 2 : 2,
 
-  reporter: 'html',
+  reporter: [
+    ['html', { open: 'never' }],
+    ['list']
+  ],
 
   use: {
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
 
   projects: [
@@ -20,7 +25,7 @@ export default defineConfig({
       name: 'api',
       testMatch: '**/api/**/*.spec.ts',
       use: {
-        baseURL: 'https://api.realworld.show/api/',
+        baseURL: process.env.API_BASE_URL ?? 'https://api.realworld.show/api/',
       },
     },
 
@@ -29,7 +34,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'https://demo.realworld.show/',
+        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
       },
     },
 
@@ -38,7 +43,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Firefox'],
-        baseURL: 'https://demo.realworld.show/',
+        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
       },
     },
 
@@ -47,7 +52,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Safari'],
-        baseURL: 'https://demo.realworld.show/',
+        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
       },
     },
   ],

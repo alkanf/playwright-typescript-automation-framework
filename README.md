@@ -41,16 +41,19 @@ npx playwright test --workers=1
 ## Proje yapısı
 
 ```text
+docs/
+└── TEST_PLAN.md   Master Test Planı (Kapsam, Strateji, Riskler)
+src/
+├── fixtures/      Ortak Playwright custom fixture'ları
+├── pages/         Page Object Model sınıfları
+├── schemas/       Zod response şemaları
+└── utils/         API client ve yardımcı fonksiyonlar
 tests/
-├── api/       API testleri
-├── fixtures/  Ortak Playwright fixture'ları
-├── pages/     Page Object Model sınıfları
-├── schemas/   Zod response şemaları
-├── ui/        UI testleri
-└── utils/     API yardımcı fonksiyonları
+├── api/           API testleri
+└── ui/            UI testleri
 ```
 
-API testleri `api.realworld.show`, UI testleri ise `demo.realworld.show` üzerinde çalışır. API adresini değiştirmek için `API_BASE_URL` environment variable'ı kullanılabilir.
+API testleri `api.realworld.show`, UI testleri ise `demo.realworld.show` üzerinde çalışır. API adresini değiştirmek için `API_BASE_URL` environment variable'ı kullanılabilir. Detaylı test planı için [`docs/TEST_PLAN.md`](./docs/TEST_PLAN.md) dosyasını inceleyebilirsiniz.
 
 ## Raporlar
 

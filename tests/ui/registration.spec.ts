@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { HomePage } from "../pages/home-page";
-import { RegistrationPage } from "../pages/registration-page";
+import { HomePage } from "@pages/home-page";
+import { RegistrationPage } from "@pages/registration-page";
 
 
 test("User can register through the UI", async ({ page }) => {

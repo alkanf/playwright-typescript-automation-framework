@@ -4,10 +4,10 @@ import {
   getCurrentUser,
   getProfile,
   unfollowUser,
-} from "../utils/profile-api";
-import { loginUser, registerUser, UserData } from "../utils/user-api";
-import { ProfileResponseSchema } from "../schemas/profile.schema";
-import { UserResponseSchema } from "../schemas/user.schema";
+} from "@utils/profile-api";
+import { loginUser, registerUser, UserData } from "@utils/user-api";
+import { ProfileResponseSchema } from "@schemas/profile.schema";
+import { UserResponseSchema } from "@schemas/user.schema";
 
 test("User can read profiles and follow or unfollow another user", async ({
   request,

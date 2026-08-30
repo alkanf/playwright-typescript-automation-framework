@@ -1,7 +1,7 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { HomePage } from "../pages/home-page";
-import { LoginPage } from "../pages/login-page";
-import { SettingsPage } from "../pages/settings-page";
+import { test, expect } from "@fixtures/user.fixture";
+import { HomePage } from "@pages/home-page";
+import { LoginPage } from "@pages/login-page";
+import { SettingsPage } from "@pages/settings-page";
 
 test("Registered user can update the username through the UI", async ({
   page,

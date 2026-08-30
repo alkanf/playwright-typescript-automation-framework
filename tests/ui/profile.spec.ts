@@ -1,7 +1,7 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { HomePage } from "../pages/home-page";
-import { LoginPage } from "../pages/login-page";
-import { ProfilePage } from "../pages/profile-page";
+import { test, expect } from "@fixtures/user.fixture";
+import { HomePage } from "@pages/home-page";
+import { LoginPage } from "@pages/login-page";
+import { ProfilePage } from "@pages/profile-page";
 
 test("Registered user can follow and unfollow a profile through the UI", async ({
   page,

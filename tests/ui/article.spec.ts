@@ -1,7 +1,7 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { ArticlePage } from "../pages/article-page";
-import { LoginPage } from "../pages/login-page";
-import { HomePage } from "../pages/home-page";
+import { test, expect } from "@fixtures/user.fixture";
+import { ArticlePage } from "@pages/article-page";
+import { LoginPage } from "@pages/login-page";
+import { HomePage } from "@pages/home-page";
 
 test("Registered user can create an article through the UI", async ({
   page,

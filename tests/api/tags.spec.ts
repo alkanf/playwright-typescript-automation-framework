@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { TagsResponseSchema } from "../schemas/tag.schema";
+import { TagsResponseSchema } from "@schemas/tag.schema";
 
 test('GET tags returns a tags list', async ({ request }) => {
   const response = await request.get('tags');

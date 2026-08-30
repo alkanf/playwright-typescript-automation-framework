@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { UserResponseSchema } from "../schemas/user.schema";
-import { loginUser, registerUser, updateUser, UserData } from "../utils/user-api";
+import { UserResponseSchema } from "@schemas/user.schema";
+import { loginUser, registerUser, updateUser, UserData } from "@utils/user-api";
 
 test("Authenticated user can update their profile through the API", async ({
   request,

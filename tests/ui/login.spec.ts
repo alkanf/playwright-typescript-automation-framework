@@ -1,8 +1,8 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { registerUser, UserData } from "../utils/user-api";
-import { LoginPage } from "../pages/login-page";
-import { HomePage } from "../pages/home-page";
-import { SettingsPage } from "../pages/settings-page";
+import { test, expect } from "@fixtures/user.fixture";
+import { registerUser, UserData } from "@utils/user-api";
+import { LoginPage } from "@pages/login-page";
+import { HomePage } from "@pages/home-page";
+import { SettingsPage } from "@pages/settings-page";
 
 
 

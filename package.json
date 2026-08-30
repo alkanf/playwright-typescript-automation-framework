@@ -1,16 +1,24 @@
 {
-  "name": "playwright-typescript-practice",
+  "name": "playwright-typescript-automation-framework",
   "version": "1.0.0",
-  "description": "",
+  "description": "Conduit RealWorld UI and API Test Automation Framework",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test tests/ui",
-    "test:api": "playwright test tests/api",
+    "test:api": "playwright test tests/api --workers=1",
     "report": "playwright show-report"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "playwright",
+    "typescript",
+    "automation",
+    "sdet",
+    "zod",
+    "api-testing",
+    "e2e-testing"
+  ],
+  "author": "Alkan",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {

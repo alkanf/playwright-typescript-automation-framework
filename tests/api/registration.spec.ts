@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { registerUser, UserData } from "../utils/user-api";
-import { UserResponseSchema } from "../schemas/user.schema";
+import { registerUser, UserData } from "@utils/user-api";
+import { UserResponseSchema } from "@schemas/user.schema";
 
 test("Registration API should return a 201 status code for successful registration", async ({
   request,

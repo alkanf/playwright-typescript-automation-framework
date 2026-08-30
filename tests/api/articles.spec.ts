@@ -9,13 +9,13 @@ import {
   unfavoriteArticle,
   updateArticle,
   ArticleData,
-} from "../utils/article-api";
-import { loginUser, registerUser, UserData } from "../utils/user-api";
+} from "@utils/article-api";
+import { loginUser, registerUser, UserData } from "@utils/user-api";
 import {
   ArticleListResponseSchema,
   ArticleResponseSchema,
-} from "../schemas/article.schema";
-import { UserResponseSchema } from "../schemas/user.schema";
+} from "@schemas/article.schema";
+import { UserResponseSchema } from "@schemas/user.schema";
 
 test("Authenticated user can create an article through the API", async ({
   request,
@@ -177,3 +177,28 @@ test("Authenticated user can find an article in the list and feed", async ({
   const feedBody = ArticleListResponseSchema.parse(await feedResponse.json());
   expect(feedBody.articlesCount).toBeGreaterThanOrEqual(0);
 });
+
+test("Article lookup should return 404 for an unknown slug", async ({
+  request,
+}) => {
+  const response = await getArticle(
+    request,
+    "invalid-token",
+    "article-that-does-not-exist",
+  );
+
+  expect(response.status()).toBe(404);
+});
+
+test("User cannot favorite an article with an invalid token", async ({
+  request,
+}) => {
+  const response = await favoriteArticle(
+    request,
+    "invalid-token",
+    "article-that-does-not-exist",
+  );
+
+  expect(response.status()).toBe(401);
+});
+

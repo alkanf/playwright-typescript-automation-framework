@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { loginUser, registerUser, UserData } from "../utils/user-api";
-import { UserResponseSchema } from "../schemas/user.schema";
+import { loginUser, registerUser, UserData } from "@utils/user-api";
+import { UserResponseSchema } from "@schemas/user.schema";
 
 test("Registered user can log in through the API", async ({ request }) => {
   const uniqueIdentifier = Date.now();

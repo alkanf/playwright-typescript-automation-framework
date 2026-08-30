@@ -1,5 +1,5 @@
 import { expect, test as base } from "@playwright/test";
-import { registerUser, UserData } from "../utils/user-api";
+import { registerUser, UserData } from "@utils/user-api";
 
 interface UserFixtures {
   registeredUser: UserData;

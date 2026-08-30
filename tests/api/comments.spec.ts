@@ -1,17 +1,17 @@
 import { test, expect } from "@playwright/test";
-import { createArticle, ArticleData } from "../utils/article-api";
+import { createArticle, ArticleData } from "@utils/article-api";
 import {
   createComment,
   deleteComment,
   getComments,
-} from "../utils/comment-api";
-import { ArticleResponseSchema } from "../schemas/article.schema";
+} from "@utils/comment-api";
+import { ArticleResponseSchema } from "@schemas/article.schema";
 import {
   CommentResponseSchema,
   CommentsResponseSchema,
-} from "../schemas/comment.schema";
-import { loginUser, registerUser, UserData } from "../utils/user-api";
-import { UserResponseSchema } from "../schemas/user.schema";
+} from "@schemas/comment.schema";
+import { loginUser, registerUser, UserData } from "@utils/user-api";
+import { UserResponseSchema } from "@schemas/user.schema";
 
 test("Authenticated user can create, read and delete a comment through the API", async ({
   request,
