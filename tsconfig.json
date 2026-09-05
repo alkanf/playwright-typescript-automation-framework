@@ -9,6 +9,7 @@
       "@fixtures/*": ["src/fixtures/*"],
       "@schemas/*": ["src/schemas/*"],
       "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"],
       "@src/*": ["src/*"]
     },
     "strict": true,

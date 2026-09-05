@@ -1,8 +1,10 @@
 /// <reference types="node" />
 import { defineConfig, devices } from '@playwright/test';
+import { config } from './src/config/environment';
 
 export default defineConfig({
   testDir: './tests',
+  timeout: config.defaultTimeout,
   fullyParallel: true,
 
   forbidOnly: !!process.env.CI,
@@ -25,7 +27,7 @@ export default defineConfig({
       name: 'api',
       testMatch: '**/api/**/*.spec.ts',
       use: {
-        baseURL: process.env.API_BASE_URL ?? 'https://api.realworld.show/api/',
+        baseURL: config.apiBaseUrl,
       },
     },
 
@@ -34,7 +36,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
+        baseURL: config.uiBaseUrl,
       },
     },
 
@@ -43,7 +45,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Firefox'],
-        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
+        baseURL: config.uiBaseUrl,
       },
     },
 
@@ -52,7 +54,7 @@ export default defineConfig({
       testMatch: '**/ui/**/*.spec.ts',
       use: {
         ...devices['Desktop Safari'],
-        baseURL: process.env.UI_BASE_URL ?? 'https://demo.realworld.show/',
+        baseURL: config.uiBaseUrl,
       },
     },
   ],

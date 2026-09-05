@@ -1,7 +1,8 @@
 /// <reference types="node" />
-import { APIRequestContext, APIResponse,} from "@playwright/test"
+import { APIRequestContext, APIResponse } from "@playwright/test";
+import { config } from "@config/environment";
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "https://api.realworld.show/api/";
+const apiBaseUrl = config.apiBaseUrl;
 
 export interface UserData {
     username : string,
