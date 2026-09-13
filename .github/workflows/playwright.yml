@@ -21,8 +21,10 @@ jobs:
         run: npm run lint
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Run API tests
+        run: npx playwright test --project=api --workers=1
+      - name: Run UI tests
+        run: npx playwright test --project=chromium --project=firefox --project=webkit
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

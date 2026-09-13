@@ -4,7 +4,13 @@ import playwright from 'eslint-plugin-playwright';
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/', 'playwright-report/', 'test-results/', 'blob-report/', '**/*.d.ts'],
+    ignores: [
+      'node_modules/',
+      'playwright-report/',
+      'test-results/',
+      'blob-report/',
+      '**/*.d.ts',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -22,3 +28,4 @@ export default tseslint.config(
     },
   },
 );
+
