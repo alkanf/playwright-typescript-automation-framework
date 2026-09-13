@@ -1,13 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { HomePage } from "@pages/home-page";
-import { RegistrationPage } from "@pages/registration-page";
+import { test, expect } from '@playwright/test';
+import { HomePage } from '@pages/home-page';
+import { RegistrationPage } from '@pages/registration-page';
 
-
-test("User can register through the UI", async ({ page }) => {
+test('User can register through the UI', async ({ page }) => {
   const uniqueIdentifier = Date.now();
   const username = `testUser${uniqueIdentifier}`;
   const email = `testUser${uniqueIdentifier}@email.com`;
-  const password = "test123";
+  const password = 'test123';
   const registrationPage = new RegistrationPage(page);
   const homePage = new HomePage(page);
 
@@ -15,14 +14,14 @@ test("User can register through the UI", async ({ page }) => {
   await registrationPage.register(username, email, password);
 
   await expect(homePage.yourFeedLink).toBeVisible();
-  await expect(page.getByRole("link", { name: username, exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: username, exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/$/);
 });
 
 const missingRegistrationFields = [
-  { name: "username", username: "", email: "valid@example.com", password: "test123" },
-  { name: "email", username: "validUser", email: "", password: "test123" },
-  { name: "password", username: "validUser", email: "valid@example.com", password: "" },
+  { name: 'username', username: '', email: 'valid@example.com', password: 'test123' },
+  { name: 'email', username: 'validUser', email: '', password: 'test123' },
+  { name: 'password', username: 'validUser', email: 'valid@example.com', password: '' },
 ];
 
 for (const registrationCase of missingRegistrationFields) {

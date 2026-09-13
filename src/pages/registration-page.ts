@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class RegistrationPage {
   readonly usernameInput: Locator;
@@ -7,21 +7,17 @@ export class RegistrationPage {
   readonly signUpButton: Locator;
 
   constructor(private readonly page: Page) {
-    this.usernameInput = page.getByRole("textbox", { name: "Username" });
-    this.emailInput = page.getByRole("textbox", { name: "Email" });
-    this.passwordInput = page.getByRole("textbox", { name: "Password" });
-    this.signUpButton = page.getByRole("button", { name: "Sign up" });
+    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
+    this.emailInput = page.getByRole('textbox', { name: 'Email' });
+    this.passwordInput = page.getByRole('textbox', { name: 'Password' });
+    this.signUpButton = page.getByRole('button', { name: 'Sign up' });
   }
 
   async open(): Promise<void> {
-    await this.page.goto("/register");
+    await this.page.goto('/register');
   }
 
-  async register(
-    username: string,
-    email: string,
-    password: string,
-  ): Promise<void> {
+  async register(username: string, email: string, password: string): Promise<void> {
     await this.usernameInput.fill(username);
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);

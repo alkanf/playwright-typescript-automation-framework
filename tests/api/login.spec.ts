@@ -1,13 +1,13 @@
-import { test, expect } from "@playwright/test";
-import { loginUser, registerUser, UserData } from "@utils/user-api";
-import { UserResponseSchema } from "@schemas/user.schema";
+import { test, expect } from '@playwright/test';
+import { loginUser, registerUser, UserData } from '@utils/user-api';
+import { UserResponseSchema } from '@schemas/user.schema';
 
-test("Registered user can log in through the API", async ({ request }) => {
+test('Registered user can log in through the API', async ({ request }) => {
   const uniqueIdentifier = Date.now();
   const user: UserData = {
     username: `testUser${uniqueIdentifier}`,
     email: `testUser${uniqueIdentifier}@email.com`,
-    password: "test123",
+    password: 'test123',
   };
 
   const registrationResponse = await registerUser(request, user);
@@ -21,14 +21,8 @@ test("Registered user can log in through the API", async ({ request }) => {
   expect(responseBody.user.token).toBeTruthy();
 });
 
-test("User cannot log in through the API with an incorrect password", async ({
-  request,
-}) => {
-  const response = await loginUser(
-    request,
-    "unknown-user@email.com",
-    "wrong-password",
-  );
+test('User cannot log in through the API with an incorrect password', async ({ request }) => {
+  const response = await loginUser(request, 'unknown-user@email.com', 'wrong-password');
 
   expect(response.status()).toBe(401);
 });

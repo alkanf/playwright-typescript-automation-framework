@@ -1,5 +1,5 @@
-import { APIRequestContext, APIResponse } from "@playwright/test";
-import { config } from "@config/environment";
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { config } from '@config/environment';
 
 const apiBaseUrl = config.apiBaseUrl;
 
@@ -44,10 +44,7 @@ export async function deleteComment(
   commentId: number,
 ): Promise<APIResponse> {
   return request.delete(
-    new URL(
-      `articles/${encodeURIComponent(slug)}/comments/${commentId}`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`articles/${encodeURIComponent(slug)}/comments/${commentId}`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,

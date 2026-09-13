@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class ProfilePage {
   readonly followButton: Locator;
@@ -6,16 +6,16 @@ export class ProfilePage {
   readonly usernameHeading: Locator;
 
   constructor(private readonly page: Page) {
-    this.followButton = page.getByRole("button", {
+    this.followButton = page.getByRole('button', {
       name: /Follow johndoe/,
       exact: false,
     });
-    this.unfollowButton = page.getByRole("button", {
+    this.unfollowButton = page.getByRole('button', {
       name: /Unfollow johndoe/,
       exact: false,
     });
-    this.usernameHeading = page.getByRole("heading", {
-      name: "johndoe",
+    this.usernameHeading = page.getByRole('heading', {
+      name: 'johndoe',
       exact: true,
     });
   }
