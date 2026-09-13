@@ -1,9 +1,9 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { HomePage } from "../pages/home-page";
-import { LoginPage } from "../pages/login-page";
-import { ProfilePage } from "../pages/profile-page";
+import { test, expect } from '@fixtures/user.fixture';
+import { HomePage } from '@pages/home-page';
+import { LoginPage } from '@pages/login-page';
+import { ProfilePage } from '@pages/profile-page';
 
-test("Registered user can follow and unfollow a profile through the UI", async ({
+test('Registered user can follow and unfollow a profile through the UI', async ({
   page,
   registeredUser: user,
 }) => {
@@ -15,7 +15,7 @@ test("Registered user can follow and unfollow a profile through the UI", async (
   await loginPage.login(user.email, user.password);
   await expect(homePage.yourFeedLink).toBeVisible();
 
-  await profilePage.open("johndoe");
+  await profilePage.open('johndoe');
   await expect(profilePage.usernameHeading).toBeVisible();
 
   await profilePage.follow();
@@ -25,10 +25,12 @@ test("Registered user can follow and unfollow a profile through the UI", async (
   await expect(profilePage.followButton).toBeVisible();
 });
 
-test("Anonymous user can view a profile but clicking follow redirects to login", async ({ page }) => {
+test('Anonymous user can view a profile but clicking follow redirects to login', async ({
+  page,
+}) => {
   const profilePage = new ProfilePage(page);
 
-  await profilePage.open("johndoe");
+  await profilePage.open('johndoe');
 
   await expect(page).toHaveURL(/\/profile\/johndoe$/);
   await expect(profilePage.usernameHeading).toBeVisible();
@@ -37,5 +39,4 @@ test("Anonymous user can view a profile but clicking follow redirects to login",
 
   await profilePage.follow();
   await expect(page).toHaveURL(/\/login/);
-
 });

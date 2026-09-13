@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { TagsResponseSchema } from "../schemas/tag.schema";
+import { TagsResponseSchema } from '@schemas/tag.schema';
 
 test('GET tags returns a tags list', async ({ request }) => {
   const response = await request.get('tags');
@@ -9,6 +9,5 @@ test('GET tags returns a tags list', async ({ request }) => {
 
   const responseBody = TagsResponseSchema.parse(await response.json());
 
-  expect(responseBody.tags.every((tag) => typeof tag === "string")).toBe(true);
-  
+  expect(responseBody.tags.every((tag) => typeof tag === 'string')).toBe(true);
 });

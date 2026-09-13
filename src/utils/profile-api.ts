@@ -1,12 +1,13 @@
-import { APIRequestContext, APIResponse } from "@playwright/test";
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { config } from '@config/environment';
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "https://api.realworld.show/api/";
+const apiBaseUrl = config.apiBaseUrl;
 
 export async function getCurrentUser(
   request: APIRequestContext,
   token: string,
 ): Promise<APIResponse> {
-  return request.get(new URL("user", apiBaseUrl).toString(), {
+  return request.get(new URL('user', apiBaseUrl).toString(), {
     headers: {
       Authorization: `Token ${token}`,
     },
@@ -18,14 +19,11 @@ export async function getProfile(
   token: string,
   username: string,
 ): Promise<APIResponse> {
-  return request.get(
-    new URL(`profiles/${encodeURIComponent(username)}`, apiBaseUrl).toString(),
-    {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+  return request.get(new URL(`profiles/${encodeURIComponent(username)}`, apiBaseUrl).toString(), {
+    headers: {
+      Authorization: `Token ${token}`,
     },
-  );
+  });
 }
 
 export async function followUser(
@@ -34,10 +32,7 @@ export async function followUser(
   username: string,
 ): Promise<APIResponse> {
   return request.post(
-    new URL(
-      `profiles/${encodeURIComponent(username)}/follow`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`profiles/${encodeURIComponent(username)}/follow`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,
@@ -52,10 +47,7 @@ export async function unfollowUser(
   username: string,
 ): Promise<APIResponse> {
   return request.delete(
-    new URL(
-      `profiles/${encodeURIComponent(username)}/follow`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`profiles/${encodeURIComponent(username)}/follow`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,

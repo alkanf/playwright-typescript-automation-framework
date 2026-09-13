@@ -1,26 +1,26 @@
 /// <reference types="node" />
-import { APIRequestContext, APIResponse,} from "@playwright/test"
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { config } from '@config/environment';
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "https://api.realworld.show/api/";
+const apiBaseUrl = config.apiBaseUrl;
 
 export interface UserData {
-    username : string,
-    email : string,
-    password : string;
+  username: string;
+  email: string;
+  password: string;
+  bio?: string;
+  image?: string;
 }
 
 export async function registerUser(
   request: APIRequestContext,
   user: UserData,
 ): Promise<APIResponse> {
-  return request.post(
-    new URL("users", apiBaseUrl).toString(),
-    {
-      data: {
-        user,
-      },
+  return request.post(new URL('users', apiBaseUrl).toString(), {
+    data: {
+      user,
     },
-  );
+  });
 }
 
 export async function loginUser(
@@ -28,17 +28,14 @@ export async function loginUser(
   email: string,
   password: string,
 ): Promise<APIResponse> {
-  return request.post(
-    new URL("users/login", apiBaseUrl).toString(),
-    {
-      data: {
-        user: {
-          email,
-          password,
-        },
+  return request.post(new URL('users/login', apiBaseUrl).toString(), {
+    data: {
+      user: {
+        email,
+        password,
       },
     },
-  );
+  });
 }
 
 export async function updateUser(
@@ -46,7 +43,7 @@ export async function updateUser(
   token: string,
   user: Partial<UserData>,
 ): Promise<APIResponse> {
-  return request.put(new URL("user", apiBaseUrl).toString(), {
+  return request.put(new URL('user', apiBaseUrl).toString(), {
     headers: {
       Authorization: `Token ${token}`,
     },

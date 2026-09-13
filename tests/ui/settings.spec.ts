@@ -1,9 +1,9 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { HomePage } from "../pages/home-page";
-import { LoginPage } from "../pages/login-page";
-import { SettingsPage } from "../pages/settings-page";
+import { test, expect } from '@fixtures/user.fixture';
+import { HomePage } from '@pages/home-page';
+import { LoginPage } from '@pages/login-page';
+import { SettingsPage } from '@pages/settings-page';
 
-test("Registered user can update the username through the UI", async ({
+test('Registered user can update the username through the UI', async ({
   page,
   registeredUser: user,
 }) => {
@@ -19,10 +19,10 @@ test("Registered user can update the username through the UI", async ({
   await settingsPage.open();
   await settingsPage.updateUsername(updatedUsername);
 
-  await expect(page.getByRole("link", { name: updatedUsername })).toBeVisible();
+  await expect(page.getByRole('link', { name: updatedUsername })).toBeVisible();
 });
 
-test("Anonymous user is redirected when opening settings", async ({ page }) => {
+test('Anonymous user is redirected when opening settings', async ({ page }) => {
   const settingsPage = new SettingsPage(page);
 
   await settingsPage.open();

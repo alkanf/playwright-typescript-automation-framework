@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class ArticlePage {
   readonly newArticleLink: Locator;
@@ -13,38 +13,34 @@ export class ArticlePage {
   readonly unfavoriteArticleButton: Locator;
 
   constructor(private readonly page: Page) {
-    this.newArticleLink = page.getByRole("link", {
+    this.newArticleLink = page.getByRole('link', {
       name: /New Article/,
     });
-    this.titleInput = page.getByPlaceholder("Article Title");
-    this.descriptionInput = page.getByPlaceholder(
-      "What's this article about?",
-    );
-    this.bodyInput = page.getByPlaceholder("Write your article (in markdown)");
-    this.tagsInput = page.getByPlaceholder("Enter tags");
-    this.publishButton = page.getByRole("button", {
-      name: "Publish Article",
+    this.titleInput = page.getByPlaceholder('Article Title');
+    this.descriptionInput = page.getByPlaceholder("What's this article about?");
+    this.bodyInput = page.getByPlaceholder('Write your article (in markdown)');
+    this.tagsInput = page.getByPlaceholder('Enter tags');
+    this.publishButton = page.getByRole('button', {
+      name: 'Publish Article',
       exact: true,
     });
-    this.commentInput = page.getByPlaceholder("Write a comment...");
-    this.postCommentButton = page.getByRole("button", {
-      name: "Post Comment",
+    this.commentInput = page.getByPlaceholder('Write a comment...');
+    this.postCommentButton = page.getByRole('button', {
+      name: 'Post Comment',
       exact: true,
     });
     this.favoriteArticleButton = page
-      .getByRole("button", { name: /Article/ })
+      .getByRole('button', { name: /Article/ })
       .filter({ hasText: /Favorite Article/ })
       .filter({ hasNotText: /Unfavorite Article/ })
       .first();
-    this.unfavoriteArticleButton = page
-      .getByRole("button", { name: /Unfavorite Article/ })
-      .first();
+    this.unfavoriteArticleButton = page.getByRole('button', { name: /Unfavorite Article/ }).first();
   }
 
   async openEditor(): Promise<void> {
     await this.newArticleLink.click();
     await this.page.waitForURL(/\/editor$/);
-    await this.titleInput.waitFor({ state: "visible" });
+    await this.titleInput.waitFor({ state: 'visible' });
   }
 
   async openArticle(slug: string): Promise<void> {
@@ -65,7 +61,7 @@ export class ArticlePage {
   }
 
   articleTitle(title: string): Locator {
-    return this.page.getByRole("heading", { name: title, exact: true });
+    return this.page.getByRole('heading', { name: title, exact: true });
   }
 
   async addComment(comment: string): Promise<void> {

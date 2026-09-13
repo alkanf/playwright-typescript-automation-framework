@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const ArticleAuthorSchema = z.object({
   username: z.string(),

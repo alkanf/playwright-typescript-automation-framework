@@ -1,5 +1,5 @@
-import { expect, test as base } from "@playwright/test";
-import { registerUser, UserData } from "../utils/user-api";
+import { expect, test as base } from '@playwright/test';
+import { registerUser, UserData } from '@utils/user-api';
 
 interface UserFixtures {
   registeredUser: UserData;
@@ -11,7 +11,7 @@ export const test = base.extend<UserFixtures>({
     const user: UserData = {
       username: `fixtureUser${uniqueIdentifier}`,
       email: `fixtureUser${uniqueIdentifier}@email.com`,
-      password: "test123",
+      password: 'test123',
     };
 
     const registrationResponse = await registerUser(request, user);

@@ -1,6 +1,7 @@
-import { APIRequestContext, APIResponse } from "@playwright/test";
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { config } from '@config/environment';
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "https://api.realworld.show/api/";
+const apiBaseUrl = config.apiBaseUrl;
 
 export interface ArticleData {
   title: string;
@@ -14,7 +15,7 @@ export async function createArticle(
   token: string,
   article: ArticleData,
 ): Promise<APIResponse> {
-  return request.post(new URL("articles", apiBaseUrl).toString(), {
+  return request.post(new URL('articles', apiBaseUrl).toString(), {
     headers: {
       Authorization: `Token ${token}`,
     },
@@ -29,32 +30,26 @@ export async function getArticle(
   token: string,
   slug: string,
 ): Promise<APIResponse> {
-  return request.get(
-    new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(),
-    {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    },
-  );
-}
-
-export async function listArticles(
-  request: APIRequestContext,
-  token: string,
-): Promise<APIResponse> {
-  return request.get(new URL("articles", apiBaseUrl).toString(), {
+  return request.get(new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(), {
     headers: {
       Authorization: `Token ${token}`,
     },
   });
 }
 
-export async function getFeed(
+export async function listArticles(
   request: APIRequestContext,
   token: string,
 ): Promise<APIResponse> {
-  return request.get(new URL("articles/feed", apiBaseUrl).toString(), {
+  return request.get(new URL('articles', apiBaseUrl).toString(), {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+}
+
+export async function getFeed(request: APIRequestContext, token: string): Promise<APIResponse> {
+  return request.get(new URL('articles/feed', apiBaseUrl).toString(), {
     headers: {
       Authorization: `Token ${token}`,
     },
@@ -67,17 +62,14 @@ export async function updateArticle(
   slug: string,
   article: ArticleData,
 ): Promise<APIResponse> {
-  return request.put(
-    new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(),
-    {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-      data: {
-        article,
-      },
+  return request.put(new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(), {
+    headers: {
+      Authorization: `Token ${token}`,
     },
-  );
+    data: {
+      article,
+    },
+  });
 }
 
 export async function deleteArticle(
@@ -85,14 +77,11 @@ export async function deleteArticle(
   token: string,
   slug: string,
 ): Promise<APIResponse> {
-  return request.delete(
-    new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(),
-    {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+  return request.delete(new URL(`articles/${encodeURIComponent(slug)}`, apiBaseUrl).toString(), {
+    headers: {
+      Authorization: `Token ${token}`,
     },
-  );
+  });
 }
 
 export async function favoriteArticle(
@@ -101,10 +90,7 @@ export async function favoriteArticle(
   slug: string,
 ): Promise<APIResponse> {
   return request.post(
-    new URL(
-      `articles/${encodeURIComponent(slug)}/favorite`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`articles/${encodeURIComponent(slug)}/favorite`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,
@@ -119,10 +105,7 @@ export async function unfavoriteArticle(
   slug: string,
 ): Promise<APIResponse> {
   return request.delete(
-    new URL(
-      `articles/${encodeURIComponent(slug)}/favorite`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`articles/${encodeURIComponent(slug)}/favorite`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,

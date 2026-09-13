@@ -1,6 +1,7 @@
-import { APIRequestContext, APIResponse } from "@playwright/test";
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { config } from '@config/environment';
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "https://api.realworld.show/api/";
+const apiBaseUrl = config.apiBaseUrl;
 
 export async function getComments(
   request: APIRequestContext,
@@ -43,10 +44,7 @@ export async function deleteComment(
   commentId: number,
 ): Promise<APIResponse> {
   return request.delete(
-    new URL(
-      `articles/${encodeURIComponent(slug)}/comments/${commentId}`,
-      apiBaseUrl,
-    ).toString(),
+    new URL(`articles/${encodeURIComponent(slug)}/comments/${commentId}`, apiBaseUrl).toString(),
     {
       headers: {
         Authorization: `Token ${token}`,

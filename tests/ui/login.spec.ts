@@ -1,21 +1,16 @@
-import { test, expect } from "../fixtures/user.fixture";
-import { registerUser, UserData } from "../utils/user-api";
-import { LoginPage } from "../pages/login-page";
-import { HomePage } from "../pages/home-page";
-import { SettingsPage } from "../pages/settings-page";
+import { test, expect } from '@fixtures/user.fixture';
+import { registerUser, UserData } from '@utils/user-api';
+import { LoginPage } from '@pages/login-page';
+import { HomePage } from '@pages/home-page';
+import { SettingsPage } from '@pages/settings-page';
 
-
-
-test("Registered user can log in through UI", async ({
-  page,
-  registeredUser: user,
-}) => {
-   const loginPage = new LoginPage(page);
+test('Registered user can log in through UI', async ({ page, registeredUser: user }) => {
+  const loginPage = new LoginPage(page);
   const homePage = new HomePage(page);
   const settingsPage = new SettingsPage(page);
 
   await loginPage.open();
-  
+
   await loginPage.login(user.email, user.password);
 
   await expect(homePage.yourFeedLink).toBeVisible();
@@ -28,17 +23,17 @@ test("Registered user can log in through UI", async ({
 
 const invalidLoginCases = [
   {
-    name: "an incorrect password",
-    usernamePrefix: "invalidPasswordUser",
-    emailPrefix: "invalidPasswordUser",
-    password: "wrong-password",
+    name: 'an incorrect password',
+    usernamePrefix: 'invalidPasswordUser',
+    emailPrefix: 'invalidPasswordUser',
+    password: 'wrong-password',
     shouldRegister: true,
   },
   {
-    name: "an unknown email",
-    usernamePrefix: "unknownEmailUser",
-    emailPrefix: "unknownEmailUser",
-    password: "test123",
+    name: 'an unknown email',
+    usernamePrefix: 'unknownEmailUser',
+    emailPrefix: 'unknownEmailUser',
+    password: 'test123',
     shouldRegister: false,
   },
 ];
@@ -49,7 +44,7 @@ for (const loginCase of invalidLoginCases) {
     const user: UserData = {
       username: `${loginCase.usernamePrefix}${uniqueIdentifier}`,
       email: `${loginCase.emailPrefix}${uniqueIdentifier}@email.com`,
-      password: "test123",
+      password: 'test123',
     };
     const loginPage = new LoginPage(page);
 
@@ -66,7 +61,7 @@ for (const loginCase of invalidLoginCases) {
   });
 }
 
-test("User cannot log in with empty credentials", async ({ page }) => {
+test('User cannot log in with empty credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.open();
