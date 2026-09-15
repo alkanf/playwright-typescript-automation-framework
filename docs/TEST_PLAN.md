@@ -9,171 +9,193 @@
 | **Status**                  | Active / Baselined                 |
 | **Date**                    | 2026-08-30                         |
 
----
+# QA/SDET Test Plan: Conduit (RealWorld) Automation Framework
 
-## 1. Executive Summary & Purpose
+| Metadata              | Value                                            |
+| :-------------------- | :----------------------------------------------- |
+| **Document version**  | 1.0.0                                            |
+| **System under test** | Conduit (RealWorld) web application and REST API |
+| **Test owner**        | QA/SDET                                          |
+| **Framework**         | Playwright, TypeScript, Zod                      |
+| **Status**            | Draft baseline                                   |
 
-The purpose of this document is to define the comprehensive **Test Strategy, Scope, Architecture, and Quality Gates** for automated testing of the **Conduit (RealWorld)** platform.
+## 1. Purpose
 
-Conduit is a production-grade Medium clone application providing a Single Page Application (SPA) front-end and a stateless RESTful JSON backend. This Test Plan serves as the engineering baseline to guarantee functional correctness, data integrity, contract adherence, and continuous quality delivery through automated CI/CD pipelines.
+This test plan defines the test scope, test basis, test strategy, test design techniques, execution suites, and quality gates for the Conduit automation framework.
 
----
+The plan is written as a QA/SDET engineering baseline. It defines what is tested and how coverage is organized; individual test case steps and Playwright implementation details belong in the test code and related test documentation.
 
-## 2. System Under Test (SUT) & Architecture
+## 2. Test Basis and References
 
-Conduit operates as a decoupled client-server architecture:
+In a conventional delivery project, the test plan would be based on approved product requirements, a Software Requirements Specification (SRS), acceptance criteria, API contracts, and UI specifications.
 
-```mermaid
-graph TD
-    subgraph "Target Environments"
-        UI_ENV["Frontend Web SPA<br/>demo.realworld.show"]
-        API_ENV["RESTful API Backend<br/>api.realworld.show/api"]
-    end
+This project does not provide a separate project-specific PRD or SRS. The following sources therefore form the test basis:
 
-    subgraph "Playwright Automation Suite"
-        UI_LAYER["UI E2E Layer (Page Object Model)"]
-        API_LAYER["API Contract & Functional Layer (Zod Validation)"]
-        FIXTURE_LAYER["Custom Fixtures & Hybrid Auth Setup"]
-    end
+| Test basis                                                                                                   | Use in this plan                                                                     |
+| :----------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| [RealWorld API OpenAPI specification](https://api.realworld.show/openapi.json)                               | Endpoint, request, response, authentication, parameter, and status-code expectations |
+| [API Redoc documentation](https://api.realworld.show/redoc)                                                  | Human-readable API contract reference                                                |
+| [Official API specification and Hurl tests](https://github.com/realworld-apps/realworld/tree/main/specs/api) | API behavior and executable contract examples                                        |
+| [Frontend routing specification](https://docs.realworld.show/specifications/frontend/routing/)               | UI routes and navigation expectations                                                |
+| [Frontend API specification](https://docs.realworld.show/specifications/frontend/api/)                       | UI-to-API interaction expectations                                                   |
+| [Official E2E specifications](https://github.com/realworld-apps/realworld/tree/main/specs/e2e)               | User-facing behavior and E2E coverage reference                                      |
+| [Hosted Conduit application](https://demo.realworld.show/)                                                   | Observable UI behavior and environment validation                                    |
+| Project delivery requirements                                                                                | Framework, phase, and implementation expectations                                    |
 
-    UI_LAYER -->|Browser Automation| UI_ENV
-    API_LAYER -->|HTTP Requests| API_ENV
-    FIXTURE_LAYER -->|Pre-conditions & Test Data| API_ENV
-```
+The official specifications define the product baseline. This repository translates that baseline into a Playwright-based QA/SDET test implementation.
 
-### Environment Endpoints
+## 3. System Under Test and Environment
 
-- **Web UI Base URL**: `https://demo.realworld.show`
-- **REST API Base URL**: `https://api.realworld.show/api/` (Configurable via `API_BASE_URL` env variable)
-- **API Documentation Reference**: RealWorld OpenAPI Spec
+Conduit is a web application with a frontend SPA and a REST API backend.
 
----
+| Component         | Environment                         |
+| :---------------- | :---------------------------------- |
+| Web UI            | `https://demo.realworld.show/`      |
+| REST API          | `https://api.realworld.show/api/`   |
+| API configuration | `API_BASE_URL` environment variable |
+| UI configuration  | `UI_BASE_URL` environment variable  |
+| Browsers          | Chromium, Firefox, WebKit           |
 
-## 3. Test Scope
+The hosted system is a public demo environment. The test team does not control its deployment, database, rate limits, seed data, or network conditions. A failure caused by an external environment condition must be distinguished from a confirmed product defect.
 
-### 3.1 In-Scope (Phase 1 & Current Baseline)
+## 4. Test Objectives
 
-| Module / Feature                   | Test Level | Key Objectives                                                                                             |
-| :--------------------------------- | :--------- | :--------------------------------------------------------------------------------------------------------- |
-| **Authentication & Authorization** | API & UI   | User registration, login, logout, token persistence, invalid credentials handling, empty form validations. |
-| **Articles Lifecycle (CRUD)**      | API & UI   | Creation, retrieval, update, deletion of articles, markdown rendering, slug generation.                    |
-| **Feeds & Discovery**              | API & UI   | Global feed listing, personal user feed, tag-based article filtering, pagination.                          |
-| **Social Interactions**            | API & UI   | Favoriting/unfavoriting articles, following/unfollowing author profiles, favorite counts.                  |
-| **Comments System**                | API        | Posting comments, listing article comments, deleting own comments, unauthenticated permissions.            |
-| **User Profile & Settings**        | API & UI   | Profile retrieval, updating user bio/image/password, profile feed inspection.                              |
-| **Schema & Contract Validation**   | API        | Runtime response schema validation against strict Zod models (data types, mandatory fields, status codes). |
+### 4.1 Functional testing: In scope
 
-### 3.2 Out-of-Scope (Current Phase)
+Functional testing validates whether the application delivers the behavior defined by the test basis. Current feature areas include:
 
-- Direct Database assertions (planned for future phases).
-- Multi-factor / OAuth 3rd-party authentication (GitHub/Google login).
-- Heavy performance / stress testing (> 1000 concurrent RPS).
+- User registration, login, and logout
+- Current user and profile updates
+- Article creation, retrieval, update, deletion, and favorites
+- Personal feed and article listing
+- Comments creation, retrieval, and deletion
+- Profile retrieval and follow/unfollow behavior
+- Tags retrieval
+- Protected-route and invalid-credential behavior
 
-### 3.3 Future Scope / Non-Functional Roadmapped
+### 4.2 Non-functional testing: Partially in scope
 
-- Automated Accessibility audits using `@axe-core/playwright` (WCAG 2.1 Level AA).
-- Visual Regression Testing for key UI views using Playwright screenshot comparisons.
+Compatibility and deployment validation are included in the current phase. The following non-functional areas are deferred:
 
----
+- Visual regression testing
+- Performance and load testing
+- Full security testing
+- Database testing
 
-## 4. Test Strategy & The Test Pyramid
+Basic authentication and authorization checks remain part of functional and negative testing. They do not constitute a full security assessment.
 
-To maximize execution velocity, stability, and bug detection efficiency, the framework applies the **Test Pyramid Principle**:
+## 5. Test Levels and Technical Areas
 
-```
-           / \
-          / UI \       <-- Focused on User Journeys, Critical Flows & Visual State
-         /------\
-        /  API   \     <-- High Coverage: CRUD, Edge Cases, Auth, Contract Schemas (Fast & Reliable)
-       /----------\
-      / Unit/Schema\   <-- Schema Definitions & Data Factory Validations
-     /--------------\
-```
+The following areas describe where and how the system is evaluated. They are complementary, not mutually exclusive.
 
-### 4.1 Layer Breakdown
+| Area                        | Scope and application                                                                                                                  |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **API testing**             | Direct validation of REST endpoints, status codes, payloads, authentication, and business behavior using Playwright API requests       |
+| **UI/E2E testing**          | Validation of critical user journeys through the browser using Page Objects and user-facing locators                                   |
+| **Integration testing**     | Validation of interactions between the UI, API, and backend behavior                                                                   |
+| **Contract/schema testing** | Runtime validation of API response structures using OpenAPI expectations and Zod schemas                                               |
+| **Compatibility testing**   | Execution of UI coverage against Chromium, Firefox, and WebKit                                                                         |
+| **Deployment testing**      | Validation that the configured CI environment can install dependencies, browsers, compile the project, and execute the intended suites |
 
-1. **API Integration & Contract Layer (`tests/api/`)**:
-   - Executes directly via Playwright's `APIRequestContext`.
-   - Validates HTTP status codes, headers, and strict JSON payloads using **Zod schemas**.
-   - Covers positive paths, negative status codes (400, 401, 403, 404, 422), and business rule validations.
-   - Ultra-fast execution (~0.2s per test) serving as the primary regression safety net.
+## 6. Test Design Techniques and Approaches
 
-2. **UI End-to-End Layer (`tests/ui/`)**:
-   - Structured using the **Page Object Model (POM)** pattern.
-   - Utilizes resilient, user-centric locators (`page.getByRole`, `page.getByLabel`, `page.getByPlaceholder`).
-   - Validates end-to-end user journeys (e.g. registration -> login -> post article -> verify on global feed -> logout).
+The test suite will apply the following techniques where they provide meaningful risk coverage:
 
-3. **Hybrid Setup Strategy (State Optimization)**:
-   - For UI tests not explicitly testing login, pre-conditions (e.g., creating test users, publishing seed articles) are orchestrated via **API calls within Playwright Fixtures** to eliminate redundant UI steps and reduce flakiness.
+| Technique                    | Application                                                                                                                                          |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Negative testing**         | Invalid credentials, empty required fields, invalid tokens, unauthorized operations, and invalid resource requests                                   |
+| **Boundary testing**         | Empty values, minimum/maximum meaningful values, pagination limits, and input length boundaries                                                      |
+| **Equivalence partitioning** | Valid, invalid, empty, and unregistered input classes such as email and password values                                                              |
+| **Decision table testing**   | Combinations of authentication state, resource ownership, request validity, and article/favorite state                                               |
+| **Exploratory testing**      | Investigation of behavior not fully represented by repeatable automated scenarios; valuable findings may become future test or automation candidates |
 
----
+Edge cases are not maintained as a separate category. They are covered through the techniques above when relevant.
 
-## 5. Test Design Techniques Applied
+## 7. Test Execution Suites
 
-To ensure high defect-detection yields without bloated test suites, scenarios are engineered using formal test design techniques:
+### 7.1 Smoke suite
 
-| Technique                             | Application in Framework      | Example Scenario                                                                       |
-| :------------------------------------ | :---------------------------- | :------------------------------------------------------------------------------------- |
-| **Equivalence Partitioning (EP)**     | Authentication & Input Fields | Valid email vs. invalid format email vs. unregistered email.                           |
-| **Boundary Value Analysis (BVA)**     | Input Lengths & Pagination    | Empty article title, max tag count, feed limit/offset boundaries.                      |
-| **Decision Table Testing**            | Permissions & Authorization   | Authenticated vs. Anonymous user accessing `/editor` or `/settings`.                   |
-| **State Transition Testing**          | Article & Favorite Lifecycle  | Article: Unfavorited -> Favorited -> Unfavorited; Follow user -> Feed update.          |
-| **Error Guessing / Negative Testing** | API & UI Validation           | Duplicate username/email registration (422), modifying another author's article (403). |
+The smoke suite is a small set of critical tests used to determine whether the environment and core application flows are suitable for further testing. It includes essential authentication, API availability, article, and primary UI checks.
 
----
+Target: 100% pass for a build to proceed.
 
-## 6. Test Data Management & Isolation
+### 7.2 Sanity testing
 
-1. **Zero Shared Mutable State**: Each test creates its own isolated dynamic entities (unique username, email, article title) using timestamped identifiers / random generators.
-2. **Parallel Execution Safe**: Tests run with `fullyParallel: true` across multiple worker processes without race conditions or shared database locks.
-3. **Automatic Tear-Down & Idempotency**: Created entities that require cleanup are deleted via API utility hooks or isolated to ephemeral test sessions.
+Sanity testing is focused validation after a specific change or fix. It targets the affected functionality and is selected as needed; it does not require a permanently separate suite.
 
----
+### 7.3 Regression suite
 
-## 7. Tooling & Technology Stack
+The regression suite contains the broader automated coverage used to identify unintended changes across existing functionality. It includes API, UI, contract, negative, boundary, and cross-browser coverage as applicable.
 
-| Component                     | Technology                                            | Rationale                                                                       |
-| :---------------------------- | :---------------------------------------------------- | :------------------------------------------------------------------------------ |
-| **Test Runner & Engine**      | [Playwright](https://playwright.dev/)                 | Native async/await, auto-waiting, multi-browser engine, isolated contexts.      |
-| **Language**                  | [TypeScript](https://www.typescriptlang.org/)         | Type safety, IntelliSense, autocompletion, maintainable SDET architecture.      |
-| **Schema Validation**         | [Zod](https://zod.dev/)                               | Type-safe runtime JSON validation ensuring API contracts do not drift.          |
-| **CI / CD Orchestration**     | [GitHub Actions](https://github.com/features/actions) | Automated regression triggers on Push/PR, artifact archiving, report hosting.   |
-| **Reporting & Observability** | Playwright HTML Reporter + Tracing                    | Rich execution reports with step-by-step logs, screenshots, and network traces. |
+## 8. Test Data Provisioning
 
----
+Test data will be provisioned through API helpers and Playwright fixtures where this reduces unnecessary UI setup. Generated users, articles, and comments should use unique identifiers to reduce collisions in the shared demo environment.
 
-## 8. Quality Gates & Exit Criteria
+Tests should avoid depending on mutable shared data unless the dependency is intentional and documented. Fixed public demo data, such as known profiles or articles, is environment-dependent and should be treated as a maintenance risk.
 
-For a build to be deemed **Release Ready** and merged into `main`:
+Because this is a public hosted environment, cleanup cannot always be guaranteed. The test design should therefore minimize persistent data and avoid destructive actions against data not created by the test.
 
-| Metric                           | Target / Gate                        | Enforcement Method                            |
-| :------------------------------- | :----------------------------------- | :-------------------------------------------- |
-| **Smoke Suite Pass Rate**        | **100%** (Zero Tolerance)            | GitHub Actions CI blocking status             |
-| **Full Regression Pass Rate**    | **>= 98%** (0 critical/blocker bugs) | CI Quality Gate                               |
-| **Flakiness Threshold**          | **0% unquarantined flaky tests**     | Retry analysis with `trace: 'on-first-retry'` |
-| **API Contract Schema Validity** | **100% Zod Pass**                    | Automated assertions in API suites            |
-| **Code Formatting & Linting**    | **Zero errors/warnings**             | Pre-test lint check in CI                     |
+## 9. Test Pyramid and Shift-Left Strategy
 
----
+The framework follows the test pyramid: fast API and contract checks provide broad coverage, while a smaller set of UI/E2E tests validates critical user journeys.
 
-## 9. Defect Severity & Priority Classification
+Shift-left practices are applied through early feedback from TypeScript compilation, linting, schema validation, API tests, and CI execution before broader browser regression runs.
 
-| Level  | Severity               | Definition                                                                      | SLA / Action                                |
-| :----- | :--------------------- | :------------------------------------------------------------------------------ | :------------------------------------------ |
-| **S1** | **Blocker / Critical** | Core flow broken (Auth down, Article creation fails, API 500 on valid payload). | Immediate merge freeze; fix before release. |
-| **S2** | **Major**              | Feature impaired with no viable workaround (e.g. Tags filter fails).            | Fixed within the active sprint.             |
-| **S3** | **Minor**              | Cosmetic or edge case issue with easy workaround (e.g. Minor UI alignment).     | Backlog triage.                             |
+## 10. Coverage and Risk-Based Testing
 
----
+Coverage is evaluated against:
 
-## 10. Risk Assessment & Mitigation Strategy
+- Requirements and official specifications
+- Feature areas and API endpoints
+- Test levels
+- Critical user journeys
+- Positive and negative conditions
+- Boundary and decision combinations
+- Browser projects
 
-| Risk Identified                               | Impact | Likelihood | Mitigation Strategy                                                                                      |
-| :-------------------------------------------- | :----: | :--------: | :------------------------------------------------------------------------------------------------------- |
-| **Public Demo API Rate Limits / Instability** |  High  |   Medium   | Implement smart request retries, custom headers, and fallback timeout budgets.                           |
-| **Flaky Network / Timing Issues in UI**       | Medium |    Low     | Use Playwright web-first assertions (`await expect(locator).toBeVisible()`) instead of arbitrary sleeps. |
-| **Data Collision in Parallel Execution**      |  High  |    Low     | Enforce strict dynamic data generation (`uuid` / timestamp prefixes) for every worker.                   |
-| **API Schema Drift**                          |  High  |    Low     | Continuous Zod schema validation on every API response in CI.                                            |
+In a conventional team, Product/Business Analysis, QA/SDET, and Engineering agree on coverage based on business and technical risk. For this project, the coverage baseline is QA/SDET-led and derived from the official RealWorld specifications, the hosted application, and the project requirements.
+
+Coverage provides evidence-based confidence in tested behavior. It does not prove that the system contains no undiscovered defects. Residual risk must be considered when interpreting test results and release readiness.
+
+## 11. CI/CD and Quality Gates
+
+GitHub Actions is used to provide repeatable feedback on pull requests and changes to the main branches. The pipeline is expected to run:
+
+1. Dependency installation from the lockfile
+2. TypeScript type checking
+3. Linting
+4. Playwright browser installation
+5. API smoke/regression execution
+6. UI execution across configured browser projects
+7. HTML report and test-result artifact publication
+
+### Exit criteria
+
+- Smoke tests pass at 100%.
+- No open blocker or critical defect remains for release.
+- TypeScript checks pass.
+- Linting passes without errors; warnings are reviewed and reduced.
+- Contract/schema assertions pass for covered API responses.
+- Intended reports and failure evidence are available from CI.
+
+## 12. Defect Management Approach
+
+Defects are evaluated using severity, priority, reproducibility, affected environment, and available evidence. A defect report should include enough information to reproduce and investigate the issue, including relevant traces, screenshots, API requests/responses, or CI artifacts.
+
+The reusable bug report template is maintained separately from this test plan.
+
+## 13. Future Scope
+
+The following areas are intentionally deferred from the current phase:
+
+- **Visual regression testing:** Baseline screenshot comparison for critical UI views
+- **Performance testing:** Response-time, load, stress, and scalability assessment
+- **Security testing:** Dedicated security assessment, penetration testing, and security scanning beyond basic authorization checks
+- **Database testing:** Direct persistence, integrity, transaction, and API-to-database validation
+
+## 14. Review and Maintenance
+
+This plan should be reviewed when the system scope, API contract, UI behavior, execution environment, or project phase changes. Updates should be limited to decisions that affect test scope, risk, execution, or release criteria.
 
 ---
 
